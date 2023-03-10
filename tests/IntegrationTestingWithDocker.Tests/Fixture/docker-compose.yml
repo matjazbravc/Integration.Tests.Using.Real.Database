@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  mysql_integration_tests:
+    image: mysql
+    container_name: MySQL_IntegrationTests
+    restart: always
+    environment:
+      - MYSQL_DATABASE=IntegrationTesting
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_TCP_PORT=3307
+    ports:
+      - 3307:3307
+    expose:
+      - 3307
+    volumes:
+      - mysql_integration_tests:/var/lib/mysql
+    labels:
+      org.label-schema.group: "Database"
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+volumes:
+    mysql_integration_tests:
+      driver: local

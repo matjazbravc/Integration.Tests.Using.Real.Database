@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql
+    container_name: MySQL_Demo
+    restart: always
+    volumes:
+      - mysql_demo:/var/lib/mysql
+    labels:
+      org.label-schema.group: "Database"
+    networks:
+      - common_network
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  integrationtestingwithdockerdemo:
+    image: ${DOCKER_REGISTRY-}integrationtestingwithdockerdemo
+    restart: on-failure
+    hostname: integrationtestingwithdockerdemo
+    build:
+      context: .
+      dockerfile: src/IntegrationTestingWithDockerDemo/Dockerfile
+    command: sh -c "/wait && /sayhello"
+    networks:
+      - common_network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+    mysql_demo:
+      driver: local
+
+networks:
+    common_network:
+        driver: bridge

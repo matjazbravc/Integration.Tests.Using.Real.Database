@@ -1,0 +1,8 @@
+{
+	"TestSettings": {
+		"MySqlUser": "admin",
+		"MySqlPassword": "admin",
+		"MySqlDatabase": "IntegrationTesting",
+		"MySqlPortAndProto": "3307/tcp"
+	}
+}

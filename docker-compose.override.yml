@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  mysql:
+    environment:
+      - MYSQL_DATABASE=IntegrationTesting
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_TCP_PORT=3306
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+
+  integrationtestingwithdockerdemo:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=server=mysql; port=3306; database=IntegrationTesting; user=admin; password=admin; Persist Security Info=False; Connect Timeout=300;
+    ports:
+      - 8700:80
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
